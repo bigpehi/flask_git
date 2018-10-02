@@ -61,7 +61,7 @@ class User(db.Model):
 # db.session.commit()
 print("11111111111")
 print(User.query.all())
-print(User.query.filter_by(username="李陈斌").first())
+print(User.query.filter_by(username="李陈斌").first().radio)
 print(User.query.filter_by(username="李陈").first())
 
 # if User.query.filter_by(username="李陈斌"):

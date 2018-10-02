@@ -38,20 +38,22 @@ class User(db.Model):
         self.username = username
         self.password = password
         self.radio  = radio
-
+# 创建学生类
 class Student(db.Model):
     __tablename__='student'
-    number=db.Column(db.String(9),primary_key=True)
-    name=db.Column(db.String(20),unique=False)
-    sex=db.Column(db.String(20),unique=False)
-    age=db.Column(db.Integer,unique=False)
+    s_number=db.Column(db.String(9),primary_key=True)
+    s_name=db.Column(db.String(20),unique=False)
+    s_sex=db.Column(db.String(20),unique=False)
+    s_age=db.Column(db.Integer,unique=False)
 
+# 创建课程类
 class Course(db.Model):
     __tablename__='course'
     mingcheng=db.Column(db.String(20),primary_key=True)
     teacher=db.Column(db.String(20),unique=True)
     textbook=db.Column(db.String(20),unique=True)
 
+# 创建分数类（学生与课程是多对度关系）
 class Score(db.Model):
     __tablename__='score'
     id=db.Column(db.String(9),db.ForeignKey('student.number'),primary_key=True)
@@ -75,11 +77,25 @@ def login():
         username = form.username.data
         password = form.password.data
         radio = "学生"
-        if form.radioButton.data == 2:
+        if form.radioButton.data == "2":
             radio = "教师"
         #验证该用户是否在数据库中
         if User.query.filter_by(username=username).first():
-            return "登陆成功\n你好 "+username
+            #验证密码是否正确
+            if User.query.filter_by(username=username).first().password==password:#登陆成功
+                # 验证身份是否有误
+                print(User.query.filter_by(username=username).first().radio)
+                print(radio)
+                if User.query.filter_by(username=username).first().radio==radio:#身份正确
+                    # 根据身份返回对应的页面
+                    if radio=="教师":
+                        return render_template('teacher_hello.html',t_name=username)
+                    else:
+                        return render_template('student_hello.html',s_name=username)
+                else:#身份错误
+                    return "身份错误"#待改成flash
+            else:#登陆成功
+                return "用户名或密码错误"#待改成flash
         else:
             return "登录失败"
 
