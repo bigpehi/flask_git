@@ -56,36 +56,42 @@ class Course(db.Model):
 # 创建分数类（学生与课程是多对度关系）
 class Score(db.Model):
     __tablename__='score'
-    id=db.Column(db.String(9),db.ForeignKey('student.number'),primary_key=True)
+    s_number=db.Column(db.String(9),db.ForeignKey('student.number'),primary_key=True)
+    # s_name=db.Column(db.String(9),unique=False)
+    s_type=db.Column(db.String(9))
     coursename=db.Column(db.String(20),db.ForeignKey('course.mingcheng'),primary_key=True)
     score=db.Column(db.Integer)
+
     # gzstudent=db.relationship('SStudent',backref='score')
 
 @app.route('/',methods=['GET','POST'])
-def login():
+def index():
     #实例化表单类
-    form = Form_test()
+    # form = Form_test()
     if request.method == "GET":
 
         # 测试语句
         print("now is get")
         # 显示登录页面
-        return render_template('login.html',form=form)
+        return render_template('login1.html')
     if request.method == "POST":
         print("now is post")# 测试语句)
         #从返回的request的值获取表单信息
-        username = form.username.data
-        password = form.password.data
-        radio = "学生"
-        if form.radioButton.data == "2":
-            radio = "教师"
+        user_dict = request.form.to_dict() # {'radio1':'','username':'','password':''}
+
+        print(user_dict)
+        username = user_dict['username']
+        password = user_dict['password']
+        radio = user_dict['radio']
+        # radio = "学生"
+        # if 'radio2' in user_dict:
+        #     radio = "教师"
+
         #验证该用户是否在数据库中
         if User.query.filter_by(username=username).first():
             #验证密码是否正确
             if User.query.filter_by(username=username).first().password==password:#登陆成功
                 # 验证身份是否有误
-                print(User.query.filter_by(username=username).first().radio)
-                print(radio)
                 if User.query.filter_by(username=username).first().radio==radio:#身份正确
                     # 根据身份返回对应的页面
                     if radio=="教师":
