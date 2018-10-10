@@ -1418,7 +1418,16 @@ ul.tpl-dropdown-content li>a.tpl-dropdown-content-message:last-child {
     margin-bottom: 25px;
     overflow: hidden;
 }
-
+.tpl-component-center {
+    
+    border: 1px solid #e7ecf1;
+    padding: 12px 20px 15px;
+    background-color: #fff;
+    margin-top: 0;
+    margin-bottom: 25px;
+    overflow: hidden;
+    /* text-align:center; */
+}
 .tpl-portlet-components .portlet-title {
     border-bottom: 1px solid #eef1f5;
     padding: 0;
@@ -1966,5 +1975,8 @@ ul.tpl-dropdown-content li>a.tpl-dropdown-content-message:last-child {
     }
     .tpl-content-wrapper {
         padding-left: 0;
+    }
+    .tpl-content-wrapper-center {
+        text-align: center;
     }
 }

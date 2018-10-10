@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,url_for,redirect
 # 导入wtf扩展的表单类
 from flask_wtf import FlaskForm
 # 导入自定义表单需要的字段
@@ -65,7 +65,7 @@ class Score(db.Model):
     # gzstudent=db.relationship('SStudent',backref='score')
 
 @app.route('/',methods=['GET','POST'])
-def index():
+def login():
     #实例化表单类
     # form = Form_test()
     if request.method == "GET":
@@ -94,10 +94,11 @@ def index():
                 # 验证身份是否有误
                 if User.query.filter_by(username=username).first().radio==radio:#身份正确
                     # 根据身份返回对应的页面
-                    if radio=="教师":
+                    if radio=="教师":                        
                         return render_template('teacher_hello.html',t_name=username)
                     else:
-                        return render_template('student_hello.html',s_name=username)
+                        return  redirect(url_for('student',s_name=username))
+                        # return render_template('student_index.html',s_name=username)
                 else:#身份错误
                     return "身份错误"#待改成flash
             else:#登陆成功
@@ -107,6 +108,11 @@ def index():
 
     #这里缺一个注册功能
 
+@app.route('/studnet/<s_name>',methods=['GET','POST'])
+def student(s_name):
+    course = Course.query.all()
+
+    return render_template('student_index.html',s_name=s_name,courses=course)
 
 
 
