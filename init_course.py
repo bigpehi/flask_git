@@ -91,7 +91,9 @@ db.create_all()
 # db.session.add_all([course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6])
 # db.session.commit()
 # print("11111111111")
-print(Course.query.all())
+courses = Course.query.all()
+for course in courses:
+    print(course.textbook)
 # print(User.query.filter_by(username="李陈斌").first())
 # print(User.query.filter_by(username="李陈").first())
 

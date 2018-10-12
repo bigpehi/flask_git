@@ -38,31 +38,57 @@ class User(db.Model):
         self.username = username
         self.password = password
         self.radio  = radio
-# 创建学生类
+
+Score = db.Table("score",
+    db.Column("s_number",db.String(9),db.ForeignKey('student.s_number')),
+    db.Column("s_type",db.String(9),unique=False),
+    db.Column("courseName",db.String(20),db.ForeignKey('course.textbook')),
+    db.Column("score",db.Integer,unique=False)
+)
 class Student(db.Model):
     __tablename__='student'
     s_number=db.Column(db.String(9),primary_key=True)
     s_name=db.Column(db.String(20),unique=False)
     s_sex=db.Column(db.String(20),unique=False)
     s_age=db.Column(db.Integer,unique=False)
+    s_semester=db.Column(db.Integer,unique=False)
+    course = db.relationship(
+        "Course",
+        secondary = Score,
+        backref = db.backref('student')
+    )
+    def __init__(self,s_name,s_number,s_sex,s_age,s_semester):
+        self.s_number = s_number
+        self.s_name = s_name
+        self.s_sex  = s_sex
+        self.s_age  = s_age
+        self.s_semester  = s_semester
 
-# 创建课程类
 class Course(db.Model):
     __tablename__='course'
-    mingcheng=db.Column(db.String(20),primary_key=True)
-    teacher=db.Column(db.String(20),unique=True)
-    textbook=db.Column(db.String(20),unique=True)
+    mingcheng=db.Column(db.String(20),unique=False)
+    semester=db.Column(db.Integer,unique=False)
+    teacher=db.Column(db.String(20),unique=False)
+    textbook=db.Column(db.String(20),primary_key=True)
+    def __init__(self,mingcheng,semester,teacher,textbook):
+        self.mingcheng = mingcheng
+        self.semester = semester
+        self.teacher  = teacher
+        self.textbook  = textbook
 
-# 创建分数类（学生与课程是多对度关系）
-class Score(db.Model):
-    __tablename__='score'
-    s_number=db.Column(db.String(9),db.ForeignKey('student.number'),primary_key=True)
-    # s_name=db.Column(db.String(9),unique=False)
-    s_type=db.Column(db.String(9))
-    coursename=db.Column(db.String(20),db.ForeignKey('course.mingcheng'),primary_key=True)
+class Score_plus(db.Model):
+    __tablename__='score_plus'
+    id = db.Column(db.Integer,primary_key=True)
+    s_number=db.Column(db.String(9),unique=False)
+    s_name=db.Column(db.String(9),unique=False)
+    # s_type=db.Column(db.String(9),unique=False)
+    coursename=db.Column(db.String(20),unique=False)
     score=db.Column(db.Integer)
-
-    # gzstudent=db.relationship('SStudent',backref='score')
+    def __init__(self,s_number,s_name,coursename,score):
+        self.s_number=s_number
+        self.s_name=s_name
+        self.coursename=coursename
+        self.score=score
 
 @app.route('/',methods=['GET','POST'])
 def login():
@@ -94,8 +120,9 @@ def login():
                 # 验证身份是否有误
                 if User.query.filter_by(username=username).first().radio==radio:#身份正确
                     # 根据身份返回对应的页面
-                    if radio=="教师":                        
-                        return render_template('teacher_hello.html',t_name=username)
+                    if radio=="教师":                      
+                        return  redirect(url_for('teacher',t_name=username))  
+                        # return render_template('teacher_hello.html',t_name=username)
                     else:
                         return  redirect(url_for('student',s_name=username))
                         # return render_template('student_index.html',s_name=username)
@@ -108,13 +135,58 @@ def login():
 
     #这里缺一个注册功能
 
-@app.route('/studnet/<s_name>',methods=['GET','POST'])
+@app.route('/student/<s_name>',methods=['GET','POST'])
 def student(s_name):
-    course = Course.query.all()
+    courses = Course.query.all()
+    for course in courses:
+        print(course.textbook)
+    return render_template('student_index.html',s_name=s_name,courses=courses)
 
-    return render_template('student_index.html',s_name=s_name,courses=course)
+@app.route('/teacher/<t_name>',methods=['GET','POST'])
+def teacher(t_name):
+    # students = Student.query.all()
+    # return render_template('teacher2.html',t_name=t_name,students=students)
+    if request.method == "GET":
+        students = Student.query.all()
+        return render_template('teacher2.html',t_name=t_name,students=students)
+    if request.method == "POST":
+        mydict = request.form.to_dict()
+        print(mydict)# 测试
 
 
+        students = Student.query.all()
+        return render_template('teacher2.html',t_name=t_name,students=students)
+
+
+@app.route('/delete/<t_name>/<s_number>',methods=['GET','POST'])
+def delete_stu(s_number,t_name):
+    #先删除student表里的内容——score表里的相关内容会自动删除
+    del_stu = Student.query.filter_by(s_number=s_number).first()
+    db.session.delete(del_stu)
+    db.session.commit()
+    #再删除score_plus表里的内容
+    del_scores = Score_plus.query.filter_by(s_number=s_number).all()
+    for del_score in del_scores:
+        db.session.delete(del_score)
+        db.session.commit()
+    return redirect(url_for('teacher',t_name=t_name))
+
+@app.route('/show/<t_name>/<s_number>',methods=['GET','POST'])
+def show_stu(s_number,t_name):
+    student_scores = Score_plus.query.filter_by(s_number=s_number)
+    s_name = Student.query.filter_by(s_number=s_number).first().s_name
+    return render_template('show_student.html',s_name=s_name,t_name=t_name,student_scores=student_scores)
+    # del_stu=Student.query.filter_by(s_number=s_number).first()
+    # db.session.delete(del_stu)
+    # db.session.commit() 
+    pass
+
+@app.route('/alter/<s_number>',methods=['GET','POST'])
+def alter_stu(s_number):
+    # del_stu=Student.query.filter_by(s_number=s_number).first()
+    # db.session.delete(del_stu)
+    # db.session.commit() 
+    pass
 
 if __name__ == "__main__":
     app.run()

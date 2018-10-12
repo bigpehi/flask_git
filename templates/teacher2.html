@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>教务管理系统</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+     <link rel="icon" type="image/png" href="assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+</head>
+
+<body data-type="generalComponents">
+
+
+    <header class="am-topbar am-topbar-inverse admin-header">
+        <div class="am-topbar-brand">
+            <a href="javascript:;" class="tpl-logo">
+                <img src="/static/assets/img/logo.png" alt="">
+            </a>
+        </div>
+        <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right">
+
+        </div>
+
+        
+
+        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+                
+                
+            </ul>
+        </div>
+    </header>
+
+
+
+
+
+
+
+    <div class="tpl-page-container tpl-page-header-fixed">
+
+
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title">
+                功能列表
+            </div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    <li class="tpl-left-nav-item">
+                        <a href="/student_index" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-home"></i>
+                            <span>学生成绩</span>
+                        </a>
+                    </li>
+
+                    <li class="tpl-left-nav-item">
+                        <a href="/tjiaoshi" class="nav-link active">
+                            <i class="am-icon-bar-chart"></i>
+                            <span>学生信息</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="/kecheng" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-bar-chart"></i>
+                            <span>课程信息</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="/zhuanye" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-bar-chart"></i>
+                            <span>专业信息</span>
+                        </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="/xueyuan" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-bar-chart"></i>
+                            <span>学院信息</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+
+
+        <center>
+        <div class="tpl-content-wrapper">
+            
+            <div class="tpl-portlet-components">
+                <div class="portlet-title">
+                    <h1 align="center">欢迎&nbsp;&nbsp;<span style="font-size: 35px;color: #0e90d2">{{t_name}}</span>&nbsp;&nbsp;老师登录教务管理系统</h1>
+
+
+                </div>
+                <div class="tpl-block">
+                    
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <table border="1" width="600" height="150" cellspacing="0" summary="课程显示">
+                    
+                                <caption><h2>学生汇总表</h2></caption>
+                            
+                                <br>
+                                
+                                <!-- tbody 标记用于定义表格主体,改善网页浏览速度 -->
+                                
+                                <tbody>                          
+                                <tr align="center">                           
+                                    <th align="center"><p align=center font-size:10px>学号</p></th>                            
+                                    <th align="center"><p align=center font-size:10px>姓名</p></th>                            
+                                    <th align="center"><p align=center font-size:10px>性别</p></th>         
+                                    <th align="center"><p align=center font-size:10px>成绩情况</p></th>                             
+                                    <th align="center"><p align=center font-size:10px>删除</p></th>                   
+                                    <th align="center"><p align=center font-size:10px>修改</p></th>                   
+
+                                </tr>
+                                
+                                
+                            
+                            {%for student in students %}
+                                <tr align="center">    
+                                
+                                    <td align="center">{{student.s_number}}</td>
+                                    
+                                    <td align="center">{{student.s_name}}</td>
+                                    
+                                    <td align="center"> {{student.s_sex}}</td>
+                                    <form class="am-form" action="{{ url_for('show_stu',s_number = student.s_number,t_name=t_name)}}" method="post" >
+                                        <td align="center"><button type="submit" class="am-btn am-btn-default" value="查看">查看</button></td>
+                                    </form>
+                                    <form class="am-form" action="{{ url_for('delete_stu',s_number = student.s_number,t_name=t_name)}}" method="post" >
+                                        <td align="center"><button type="submit" class="am-btn am-btn-default" value="删除">删除</button></td>
+                                    </form>
+                                    <form class="am-form" action="{{ url_for('alter_stu',s_number = student.s_number)}}" method="post" >
+                                        <td align="center"><button type="submit" class="am-btn am-btn-default" value="修改">修改</button></td>
+                                    </form>
+                                 
+                                </tr>
+                            
+                            {%endfor%}
+                                
+                            </table>
+                            <table border="0" width="600" height="150" cellspacing="0" summary="添加按钮">
+                                <tr align="center">                           
+                                    <th align="center"><h2><p align=center font-size:20px>添加</p></h2></th>                            
+                                    <th align="center"><p align=center font-size:10px></p></th>                            
+                                    <th align="center"><p align=center font-size:10px></p></th>                   
+                                    <th align="center"><p align=center font-size:10px></p></th>                   
+                                    <th align="center"><p align=center font-size:10px></p></th>                   
+
+                                </tr>
+                                
+                            </table>
+        </center>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tpl-alert"></div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+  <script src="/static/assets/js/jquery.min.js"></script>
+    <script src="/static/assets/js/amazeui.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
+</body>
+
+</html>
