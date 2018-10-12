@@ -75,7 +75,7 @@
                         
                             <table border="1" width="600" height="150" cellspacing="0" summary="课程显示">
                     
-                            <caption><h2>{{s_name}}同学成绩汇总表</h2></caption>
+                            <caption><h2><span style="color: #0e90d2">{{s_name}}</span>同学第<span style="color: #0e90d2">{{student_scores[1].s_semester}}</span>学期成绩汇总表</h2></caption>
                         
                             <br>
                             
@@ -94,16 +94,17 @@
                             
                             
                         
-                        {%for student_score in student_scores %}
+                        {%for i in range(0,9) %}
                             <tr align="center">    
                             
-                            <td align="center">{{student_score.coursename}}</td>
+
+                            <td align="center">{{["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)}}</td>
                             
-                            <td align="center">{{student_score.score}}</td>
+                            <td align="center">{{student_scores[i].query.filter_by(coursename=["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)).first().score}}</td>
                             
-                            <td align="center"> 0</td>
+                            <td align="center"> {{scores_average[i]}} </td>
                             
-                            <td align="center"> 0 </td>
+                            <td align="center"> {{max_scores[i]}} </td>
                             
                         
                             </tr>

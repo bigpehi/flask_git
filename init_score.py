@@ -1,224 +1,161 @@
 from flask import Flask
-# 导入配置好的相关数据库信息
 from flask_sqlalchemy import SQLAlchemy
+from model import Score,Course,Score_plus,Student,db
+db.create_all()
 
-# 启动
-app = Flask(__name__)
-
-
-# 配置数据库并定义数据库表模型类
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/courses'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']=True
-db = SQLAlchemy(app)
-Score = db.Table("score",
-    db.Column("s_number",db.String(9),db.ForeignKey('student.s_number')),
-    db.Column("s_type",db.String(9),unique=False),
-    db.Column("courseName",db.String(20),db.ForeignKey('course.textbook')),
-    db.Column("score",db.Integer,unique=False)
-)
-class Student(db.Model):
-    __tablename__='student'
-    s_number=db.Column(db.String(9),primary_key=True)
-    s_name=db.Column(db.String(20),unique=False)
-    s_sex=db.Column(db.String(20),unique=False)
-    s_age=db.Column(db.Integer,unique=False)
-    s_semester=db.Column(db.Integer,unique=False)
-    course = db.relationship(
-        "Course",
-        secondary = Score,
-        backref = db.backref('student')
-    )
-    def __init__(self,s_name,s_number,s_sex,s_age,s_semester):
-        self.s_number = s_number
-        self.s_name = s_name
-        self.s_sex  = s_sex
-        self.s_age  = s_age
-        self.s_semester  = s_semester
-
-class Course(db.Model):
-    __tablename__='course'
-    mingcheng=db.Column(db.String(20),unique=False)
-    semester=db.Column(db.Integer,unique=False)
-    teacher=db.Column(db.String(20),unique=False)
-    textbook=db.Column(db.String(20),primary_key=True)
-    def __init__(self,mingcheng,semester,teacher,textbook):
-        self.mingcheng = mingcheng
-        self.semester = semester
-        self.teacher  = teacher
-        self.textbook  = textbook
-# class Score(db.Model):
-#     __tablename__='score'
-#     s_number=db.Column(db.String(9),db.ForeignKey('student.s_number'),primary_key=True)
-#     # s_name=db.Column(db.String(9),unique=False)
-#     s_type=db.Column(db.String(9),unique=False)
-#     coursename=db.Column(db.String(20),db.ForeignKey('course.mingcheng'),primary_key=True)
-#     score=db.Column(db.Integer)
-######################################
-# db.create_all()
 admin1 = Student('常雨','169094320',"男",18,4)
-# admin2 = Student('代章福','169094321',"男",18,4)
-# admin3 = Student('高忠','169094322',"男",18,4)
-# admin4 = Student('李陈斌','169094325',"男",18,4)
-# admin5 = Student('李雪','169094328',"女",18,4)
-# admin6 = Student('刘兆柱','169094329',"男",18,4)
-# admin7 = Student('柳亚雄','169144114',"男",18,4)
-# admin8 = Student('牛良伟','169094330',"男",18,4)
-# admin9 = Student('潘剑兵','169094331',"男",18,4)
-# admin10 = Student('钱丹丹','169094333',"女",18,4)
-# admin11 = Student('沈福莉','169094334',"女",18,4)
-# admin12 = Student('时微尘','169094336',"女",18,4)
-# admin13 = Student('谈成龙','169094337',"男",18,4)
-# admin14 = Student('汪鹏','169094338',"男",18,4)
-# admin15 = Student('汪艳','169094339',"女",18,4)
-# admin16 = Student('王宇','169094340',"男",18,4)
-# admin17 = Student('吴甜甜','169094341',"女",18,4)
-# admin18 = Student('许淼','169094343',"男",18,4)
-# admin19 = Student('许玉柱','169094344',"男",18,4)
-# admin20 = Student('薛家升','169094345',"男",18,4)
-# admin21 = Student('杨洁','169094346',"女",18,4)
-# admin22= Student('叶甜甜','169094347',"女",18,4)
-# admin23 = Student('张傲','169094348',"男",18,4)
-# admin24 = Student('张程','169094349',"男",18,4)
-# admin25 = Student('张建','169094350',"男",18,4)
-# admin26 = Student('张结宝','169104612',"男",18,4)
-# admin27 = Student('张伟','169094351',"男",18,4)
-# admin28 = Student('周力','169094352',"男",18,4)
-# admin29 = Student('朱海发','169094353',"男",18,4)
-# admin30 = Student('朱泽明','169094354',"男",18,4)
+admin2 = Student('代章福','169094321',"男",18,4)
+admin3 = Student('高忠','169094322',"男",18,4)
+admin4 = Student('李陈斌','169094325',"男",18,4)
+admin5 = Student('李雪','169094328',"女",18,4)
+admin6 = Student('刘兆柱','169094329',"男",18,4)
+admin7 = Student('柳亚雄','169144114',"男",18,4)
+admin8 = Student('牛良伟','169094330',"男",18,4)
+admin9 = Student('潘剑兵','169094331',"男",18,4)
+admin10 = Student('钱丹丹','169094333',"女",18,4)
+admin11 = Student('沈福莉','169094334',"女",18,4)
+admin12 = Student('时微尘','169094336',"女",18,4)
+admin13 = Student('谈成龙','169094337',"男",18,4)
+admin14 = Student('汪鹏','169094338',"男",18,4)
+admin15 = Student('汪艳','169094339',"女",18,4)
+admin16 = Student('王宇','169094340',"男",18,4)
+admin17 = Student('吴甜甜','169094341',"女",18,4)
+admin18 = Student('许淼','169094343',"男",18,4)
+admin19 = Student('许玉柱','169094344',"男",18,4)
+admin20 = Student('薛家升','169094345',"男",18,4)
+admin21 = Student('杨洁','169094346',"女",18,4)
+admin22= Student('叶甜甜','169094347',"女",18,4)
+admin23 = Student('张傲','169094348',"男",18,4)
+admin24 = Student('张程','169094349',"男",18,4)
+admin25 = Student('张建','169094350',"男",18,4)
+admin26 = Student('张结宝','169104612',"男",18,4)
+admin27 = Student('张伟','169094351',"男",18,4)
+admin28 = Student('周力','169094352',"男",18,4)
+admin29 = Student('朱海发','169094353',"男",18,4)
+admin30 = Student('朱泽明','169094354',"男",18,4)
 
 
-# course1_1 = Course('语文',1,'语文老师','语文_一年级上')
-# course2_1 = Course('数学',1,'数学老师','数学_一年级上')
-# course3_1 = Course('英语',1,'英语老师','英语_一年级上')
-# course4_1 = Course('物理',1,'物理老师','物理_一年级上')
-# course5_1 = Course('化学',1,'化学老师','化学_一年级上')
-# course6_1 = Course('生物',1,'生物老师','生物_一年级上')
-# course7_1 = Course('地理',1,'地理老师','地理_一年级上')
-# course8_1 = Course('政治',1,'政治老师','政治_一年级上')
-# course9_1 = Course('历史',1,'历史老师','历史_一年级上')
+course1_1 = Course('语文',1,'语文老师','语文_一年级上')
+course2_1 = Course('数学',1,'数学老师','数学_一年级上')
+course3_1 = Course('英语',1,'英语老师','英语_一年级上')
+course4_1 = Course('物理',1,'物理老师','物理_一年级上')
+course5_1 = Course('化学',1,'化学老师','化学_一年级上')
+course6_1 = Course('生物',1,'生物老师','生物_一年级上')
+course7_1 = Course('地理',1,'地理老师','地理_一年级上')
+course8_1 = Course('政治',1,'政治老师','政治_一年级上')
+course9_1 = Course('历史',1,'历史老师','历史_一年级上')
 
 
-# course1_2 = Course('语文',2,'语文老师','语文_一年级下')
-# course2_2 = Course('数学',2,'数学老师','数学_一年级下')
-# course3_2 = Course('英语',2,'英语老师','英语_一年级下')
-# course4_2 = Course('物理',2,'物理老师','物理_一年级下')
-# course5_2 = Course('化学',2,'化学老师','化学_一年级下')
-# course6_2 = Course('生物',2,'生物老师','生物_一年级下')
-# course7_2 = Course('地理',2,'地理老师','地理_一年级下')
-# course8_2 = Course('政治',2,'政治老师','政治_一年级下')
-# course9_2 = Course('历史',2,'历史老师','历史_一年级下')
+course1_2 = Course('语文',2,'语文老师','语文_一年级下')
+course2_2 = Course('数学',2,'数学老师','数学_一年级下')
+course3_2 = Course('英语',2,'英语老师','英语_一年级下')
+course4_2 = Course('物理',2,'物理老师','物理_一年级下')
+course5_2 = Course('化学',2,'化学老师','化学_一年级下')
+course6_2 = Course('生物',2,'生物老师','生物_一年级下')
+course7_2 = Course('地理',2,'地理老师','地理_一年级下')
+course8_2 = Course('政治',2,'政治老师','政治_一年级下')
+course9_2 = Course('历史',2,'历史老师','历史_一年级下')
 
-# course1_3 = Course('语文',3,'语文老师','语文_二年级上')
-# course2_3 = Course('数学',3,'数学老师','数学_二年级上')
-# course3_3 = Course('英语',3,'英语老师','英语_二年级上')
-# course4_3 = Course('物理',3,'物理老师','物理_二年级上')
-# course5_3 = Course('化学',3,'化学老师','化学_二年级上')
-# course6_3 = Course('生物',3,'生物老师','生物_二年级上')
-# course7_3 = Course('地理',3,'地理老师','地理_二年级上')
-# course8_3 = Course('政治',3,'政治老师','政治_二年级上')
-# course9_3 = Course('历史',3,'历史老师','历史_二年级上')
-
-
-# course1_4 = Course('语文',4,'语文老师','语文_二年级下')
-# course2_4 = Course('数学',4,'数学老师','数学_二年级下')
-# course3_4 = Course('英语',4,'英语老师','英语_二年级下')
-# course4_4 = Course('物理',4,'物理老师','物理_二年级下')
-# course5_4 = Course('化学',4,'化学老师','化学_二年级下')
-# course6_4 = Course('生物',4,'生物老师','生物_二年级下')
-# course7_4 = Course('地理',4,'地理老师','地理_二年级下')
-# course8_4 = Course('政治',4,'政治老师','政治_二年级下')
-# course9_4 = Course('历史',4,'历史老师','历史_二年级下')
+course1_3 = Course('语文',3,'语文老师','语文_二年级上')
+course2_3 = Course('数学',3,'数学老师','数学_二年级上')
+course3_3 = Course('英语',3,'英语老师','英语_二年级上')
+course4_3 = Course('物理',3,'物理老师','物理_二年级上')
+course5_3 = Course('化学',3,'化学老师','化学_二年级上')
+course6_3 = Course('生物',3,'生物老师','生物_二年级上')
+course7_3 = Course('地理',3,'地理老师','地理_二年级上')
+course8_3 = Course('政治',3,'政治老师','政治_二年级上')
+course9_3 = Course('历史',3,'历史老师','历史_二年级上')
 
 
-# course1_5 = Course('语文',5,'语文老师','语文_三年级上')
-# course2_5 = Course('数学',5,'数学老师','数学_三年级上')
-# course3_5 = Course('英语',5,'英语老师','英语_三年级上')
-# course4_5 = Course('物理',5,'物理老师','物理_三年级上')
-# course5_5 = Course('化学',5,'化学老师','化学_三年级上')
-# course6_5 = Course('生物',5,'生物老师','生物_三年级上')
-# course7_5 = Course('地理',5,'地理老师','地理_三年级上')
-# course8_5 = Course('政治',5,'政治老师','政治_三年级上')
-# course9_5 = Course('历史',5,'历史老师','历史_三年级上')
+course1_4 = Course('语文',4,'语文老师','语文_二年级下')
+course2_4 = Course('数学',4,'数学老师','数学_二年级下')
+course3_4 = Course('英语',4,'英语老师','英语_二年级下')
+course4_4 = Course('物理',4,'物理老师','物理_二年级下')
+course5_4 = Course('化学',4,'化学老师','化学_二年级下')
+course6_4 = Course('生物',4,'生物老师','生物_二年级下')
+course7_4 = Course('地理',4,'地理老师','地理_二年级下')
+course8_4 = Course('政治',4,'政治老师','政治_二年级下')
+course9_4 = Course('历史',4,'历史老师','历史_二年级下')
 
 
-# course1_6 = Course('语文',6,'语文老师','语文_三年级下')
-# course2_6 = Course('数学',6,'数学老师','数学_三年级下')
-# course3_6 = Course('英语',6,'英语老师','英语_三年级下')
-# course4_6 = Course('物理',6,'物理老师','物理_三年级下')
-# course5_6 = Course('化学',6,'化学老师','化学_三年级下')
-# course6_6 = Course('生物',6,'生物老师','生物_三年级下')
-# course7_6 = Course('地理',6,'地理老师','地理_三年级下')
-# course8_6 = Course('政治',6,'政治老师','政治_三年级下')
-# course9_6 = Course('历史',6,'历史老师','历史_三年级下')
-# db.session.add_all([course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6])
-# db.session.add_all([admin1,admin2,admin3,admin4,admin5,admin6,admin7,admin8,admin9,admin10,admin11,admin12,admin13,admin14,admin15,admin16,admin17,admin18,admin19,admin20,admin21,admin22,admin23,admin24,admin25,admin26,admin27,admin28,admin29,admin30])
+course1_5 = Course('语文',5,'语文老师','语文_三年级上')
+course2_5 = Course('数学',5,'数学老师','数学_三年级上')
+course3_5 = Course('英语',5,'英语老师','英语_三年级上')
+course4_5 = Course('物理',5,'物理老师','物理_三年级上')
+course5_5 = Course('化学',5,'化学老师','化学_三年级上')
+course6_5 = Course('生物',5,'生物老师','生物_三年级上')
+course7_5 = Course('地理',5,'地理老师','地理_三年级上')
+course8_5 = Course('政治',5,'政治老师','政治_三年级上')
+course9_5 = Course('历史',5,'历史老师','历史_三年级上')
 
 
-# admin1.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin2.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin3.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin4.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin5.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin6.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin7.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin8.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin9.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin10.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin11.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin12.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin13.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin14.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin15.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin16.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin17.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin18.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin19.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin20.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin21.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin22.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin23.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin24.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin25.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin26.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin27.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin28.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin29.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# admin30.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
-# db.session.commit()
+course1_6 = Course('语文',6,'语文老师','语文_三年级下')
+course2_6 = Course('数学',6,'数学老师','数学_三年级下')
+course3_6 = Course('英语',6,'英语老师','英语_三年级下')
+course4_6 = Course('物理',6,'物理老师','物理_三年级下')
+course5_6 = Course('化学',6,'化学老师','化学_三年级下')
+course6_6 = Course('生物',6,'生物老师','生物_三年级下')
+course7_6 = Course('地理',6,'地理老师','地理_三年级下')
+course8_6 = Course('政治',6,'政治老师','政治_三年级下')
+course9_6 = Course('历史',6,'历史老师','历史_三年级下')
+db.session.add_all([course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6])
+db.session.add_all([admin1,admin2,admin3,admin4,admin5,admin6,admin7,admin8,admin9,admin10,admin11,admin12,admin13,admin14,admin15,admin16,admin17,admin18,admin19,admin20,admin21,admin22,admin23,admin24,admin25,admin26,admin27,admin28,admin29,admin30])
+
+
+admin1.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin2.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin3.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin4.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin5.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin6.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin7.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin8.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin9.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin10.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin11.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin12.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin13.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin14.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin15.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin16.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin17.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin18.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin19.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin20.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin21.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin22.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin23.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin24.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin25.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin26.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin27.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin28.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin29.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+admin30.course = [course1_1,course2_1,course3_1,course4_1,course5_1,course6_1,course8_1,course9_1,course1_2,course2_2,course3_2,course4_2,course5_2,course6_2,course7_2,course8_2,course9_2,course1_3,course2_3,course3_3,course4_3,course5_3,course6_3,course7_3,course8_3,course9_3,course1_4,course2_4,course3_4,course4_4,course5_4,course6_4,course7_4,course8_4,course9_4,course1_5,course2_5,course3_5,course4_5,course5_5,course6_5,course7_5,course8_5,course9_5,course1_6,course2_6,course3_6,course4_6,course5_6,course6_6,course7_6,course8_6,course9_6]
+db.session.commit()
 # ######################################################
 
-class Score_plus(db.Model):
-    __tablename__='score_plus'
-    id = db.Column(db.Integer,primary_key=True)
-    s_number=db.Column(db.String(9),unique=False)
-    s_name=db.Column(db.String(9),unique=False)
-    # s_type=db.Column(db.String(9),unique=False)
-    coursename=db.Column(db.String(20),unique=False)
-    score=db.Column(db.Integer)
-    def __init__(self,s_number,s_name,coursename,score):
-        self.s_number=s_number
-        self.s_name=s_name
-        self.coursename=coursename
-        self.score=score
 
-
-# db.create_all()
-# students = Student.query.all()
-# for student in students:
-#     courses = student.course
-#     for course in courses:
-#         score = Score_plus(student.s_number,student.s_name,course.textbook,0)
-#         db.session.add(score)
-#         db.session.commit()
+#初始化分数表
+students = Student.query.all()
+i=60
+for student in students:
+    i+=1
+    courses = student.course
+    for course in courses:
+        
+        score = Score_plus(student.s_number,student.s_name,course.semester,course.mingcheng,i)
+        db.session.add(score)
+        db.session.commit()
 
 
 
-student=Student.query.filter_by(s_name='常雨').first()
-print(student.course)
-# student.course.remove_all()
-db.session.delete(student)
+# student=Student.query.filter_by(s_name='常雨').first()
 # print(student.course)
-db.session.commit() 
+# # student.course.remove_all()
+# db.session.delete(student)
+# # print(student.course)
+# db.session.commit() 
 
 
 

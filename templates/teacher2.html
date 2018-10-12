@@ -151,23 +151,20 @@
                             
                             {%endfor%}
                                 
-                            </table>
-                            <table border="0" width="600" height="150" cellspacing="0" summary="添加按钮">
-                                <tr align="center">                           
-                                    <th align="center"><h2><p align=center font-size:20px>添加</p></h2></th>                            
-                                    <th align="center"><p align=center font-size:10px></p></th>                            
-                                    <th align="center"><p align=center font-size:10px></p></th>                   
-                                    <th align="center"><p align=center font-size:10px></p></th>                   
-                                    <th align="center"><p align=center font-size:10px></p></th>                   
-
-                                </tr>
-                                
-                            </table>
+                            
         </center>
+        
                         </div>
-
+                        
                     </div>
+                   
                 </div>
+                <center>
+                    <form action="{{ url_for('add_stu')}}">
+                        <p><button type="submit" class="am-btn am-btn-default">添加</button></p>
+        
+                    </form>
+                </center>
                 <div class="tpl-alert"></div>
             </div>
 
