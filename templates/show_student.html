@@ -31,7 +31,7 @@
 
     <header class="am-topbar am-topbar-inverse admin-header">
         <div class="am-topbar-brand">
-            <a href="javascript:;" class="tpl-logo">
+            <a href="{{url_for('login')}}" class="tpl-logo">
                 <img src="/static/assets/img/logo.png" alt="">
             </a>
         </div>
@@ -70,8 +70,36 @@
                     
                     <div class="am-g1">
                         <div class="am-u-sm-12">
-                            
-                        </form>
+
+
+                            <table border="1" width="600" height="150" cellspacing="0" summary="学期选择">
+
+                                <tbody>                          
+                                    <tr align="center">                           
+
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=1)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="1">第一学期</button></th>
+                                        </form> 
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=2)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="2">第二学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=3)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="3">第三学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=4)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="4">第四学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=5)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="5">第五学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('show_stu',s_number=s_number,t_name=t_name,semester=6)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="6">第六学期</button></th>
+                                        </form>
+                                    
+                                    </tr>
+                                </tbody>
+                            </table>
+                       
                         
                             <table border="1" width="600" height="150" cellspacing="0" summary="课程显示">
                     

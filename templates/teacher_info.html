@@ -23,7 +23,7 @@
 
     <header class="am-topbar am-topbar-inverse admin-header">
         <div class="am-topbar-brand">
-            <a href="javascript:;" class="tpl-logo">
+            <a href="{{url_for('login')}}" class="tpl-logo">
                 <img src="/static/assets/img/logo.png" alt="">
             </a>
         </div>
@@ -57,12 +57,7 @@
             </div>
             <div class="tpl-left-nav-list">
                 <ul class="tpl-left-nav-menu">
-                    <li class="tpl-left-nav-item">
-                        <a href="/student_index" class="nav-link tpl-left-nav-link-list">
-                            <i class="am-icon-home"></i>
-                            <span>学生成绩</span>
-                        </a>
-                    </li>
+
 
                     <li class="tpl-left-nav-item">
                         <a href="/tjiaoshi" class="nav-link active">
@@ -137,7 +132,7 @@
                                     <td align="center">{{student.s_name}}</td>
                                     
                                     <td align="center"> {{student.s_sex}}</td>
-                                    <form class="am-form" action="{{ url_for('show_stu',s_number = student.s_number,t_name=t_name)}}" method="post" >
+                                    <form class="am-form" action="{{ url_for('show_stu',semester=3,s_number = student.s_number,t_name=t_name )}}" method="post" >
                                         <td align="center"><button type="submit" class="am-btn am-btn-default" value="查看">查看</button></td>
                                     </form>
                                     <form class="am-form" action="{{ url_for('delete_stu',s_number = student.s_number,t_name=t_name)}}" method="post" >
@@ -160,7 +155,7 @@
                    
                 </div>
                 <center>
-                    <form action="{{ url_for('add_stu')}}">
+                    <form action="{{  url_for('add_stu',t_name=t_name)}}" method="post" >
                         <p><button type="submit" class="am-btn am-btn-default">添加</button></p>
         
                     </form>

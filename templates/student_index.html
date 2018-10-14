@@ -31,7 +31,7 @@
 
     <header class="am-topbar am-topbar-inverse admin-header">
         <div class="am-topbar-brand">
-            <a href="javascript:;" class="tpl-logo">
+            <a href="{{url_for('login')}}" class="tpl-logo">
                 <img src="/static/assets/img/logo.png" alt="">
             </a>
         </div>
@@ -72,10 +72,38 @@
                         <div class="am-u-sm-12">
                             
                         </form>
-                        
+                           
+
+                            <table border="1" width="600" height="150" cellspacing="0" summary="学期选择">
+
+                                <tbody>                          
+                                    <tr align="center">                           
+
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=1)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="1">第一学期</button></th>
+                                        </form> 
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=2)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="2">第二学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=3)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="3">第三学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=4)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="4">第四学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=5)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="5">第五学期</button></th>
+                                        </form>
+                                        <form class="am-form" action="{{ url_for('student',s_number=s_number,semester=6)}}" method="post" >
+                                            <th align="center"><button type="submit" class="am-btn am-btn-default" value="6">第六学期</button></th>
+                                        </form>
+                                    
+                                    </tr>
+                                </tbody>
+                            </table>
                             <table border="1" width="600" height="150" cellspacing="0" summary="课程显示">
                     
-                            <caption><h2>成绩汇总表</h2></caption>
+                            <caption><h2><span style="color: #0e90d2">{{s_name}}</span>同学第<span style="color: #0e90d2">{{student_scores[1].s_semester}}</span>学期成绩汇总表</h2></caption>
                         
                             <br>
                             
@@ -84,9 +112,9 @@
                             <tbody>                          
                             <tr align="center">                           
                             <th align="center"><p align=center font-size:10px>课程名称</p></th>                            
-                            <th align="center"><p align=center font-size:10px>授课老师</p></th>                            
-                            <th align="center"><p align=center font-size:10px>课程教材</p></th>                   
-                            <th align="center"><p align=center font-size:10px>选项</p></th>
+                            <th align="center"><p align=center font-size:10px>分数</p></th>                            
+                            <th align="center"><p align=center font-size:10px>班级平均分</p></th>                   
+                            <th align="center"><p align=center font-size:10px>班级最高分</p></th>
                         
                         
                             
@@ -94,16 +122,17 @@
                             
                             
                         
-                        {%for course in courses %}
+                        {%for i in range(0,9) %}
                             <tr align="center">    
                             
-                            <td align="center">{{course.mingcheng}}</td>
+
+                            <td align="center">{{["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)}}</td>
                             
-                            <td align="center">{{course.teacher}}</td>
+                            <td align="center">{{student_scores[i].query.filter_by(coursename=["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)).first().score}}</td>
                             
-                            <td align="center"> {{course.textbook}}</td>
+                            <td align="center"> {{scores_average[i]}} </td>
                             
-                            <td align="center"> 删除 </td>
+                            <td align="center"> {{max_scores[i]}} </td>
                             
                         
                             </tr>
@@ -111,7 +140,6 @@
                         {%endfor%}
                             
                         </table></center>
-
 
 
                         </div>

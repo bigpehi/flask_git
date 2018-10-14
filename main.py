@@ -8,16 +8,7 @@ from wtforms.validators import DataRequired,EqualTo
 # 导入配置好的相关数据库信息
 from flask_sqlalchemy import SQLAlchemy
 # 导入定义好的模型
-from model import Score,Course,Score_plus,Student,db,User
-
-# 启动
-app = Flask(__name__)
-# 设置秘钥
-app.config['SECRET_KEY'] = 'secret'
-# 配置数据库并定义数据库表模型类
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/courses'
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']=True
-db = SQLAlchemy(app)
+from model import Score,Course,Score_plus,Student,User,default_semester,db,app
 
 @app.route('/',methods=['GET','POST'])
 def login():
@@ -53,7 +44,7 @@ def login():
                         return  redirect(url_for('teacher',t_name=username))  
                         # return render_template('teacher_hello.html',t_name=username)
                     else:
-                        return  redirect(url_for('student',s_name=username))
+                        return  redirect(url_for('student',s_number=password,semester=default_semester))
                         # return render_template('student_index.html',s_name=username)
                 else:#身份错误
                     return "身份错误"#待改成flash
@@ -64,30 +55,52 @@ def login():
 
     #这里缺一个注册功能
 
-@app.route('/student/<s_name>',methods=['GET','POST'])
-def student(s_name):
-    courses = Course.query.all()
-    for course in courses:
-        print(course.textbook)
-    return render_template('student_index.html',s_name=s_name,courses=courses)
+@app.route('/student/<s_number>/<semester>/',methods=['GET','POST'])
+def student(s_number,semester):
+    semester=int(semester)
+    student_scores = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=semester).all() # 获取该学生成绩信息
 
-@app.route('/teacher/<t_name>',methods=['GET','POST'])
+    s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
+    print(s_name)
+    #查询该门课最高分
+    max_scores = []
+    all_courses = ["语文",'数学','英语','物理','化学','生物','政治','历史','地理']
+
+    # print(semester)
+    # student = Score_plus.query.filter_by(coursename="语文",s_semester=semester).order_by('-score').first().
+    
+    for coursename in all_courses:
+        max_scores.append( Score_plus.query.filter_by(coursename=coursename,s_semester=semester).order_by('-score').first().score )
+    
+    #计算平均分
+    scores_average = []
+    for coursename in all_courses:
+        student_scores = Score_plus.query.filter_by(coursename=coursename,s_semester=semester).all()
+        sum = 0
+        i = 0
+        for student_score in student_scores:
+            sum += student_score.score
+            i+=1
+        scores_average.append(sum/i)
+    return render_template('student_index.html',s_name=s_name,s_number=s_number,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,semester=semester)
+
+@app.route('/teacher/<t_name>/',methods=['GET','POST'])
 def teacher(t_name):
     # students = Student.query.all()
-    # return render_template('teacher2.html',t_name=t_name,students=students)
+    # return render_template('teacher_info.html',t_name=t_name,students=students)
     if request.method == "GET":
         students = Student.query.all()
-        return render_template('teacher2.html',t_name=t_name,students=students)
+        return render_template('teacher_info.html',t_name=t_name,students=students)
     if request.method == "POST":
         mydict = request.form.to_dict()
         print(mydict)# 测试
 
 
         students = Student.query.all()
-        return render_template('teacher2.html',t_name=t_name,students=students)
+        return render_template('teacher_info.html',t_name=t_name,students=students)
 
 
-@app.route('/delete/<t_name>/<s_number>',methods=['GET','POST'])
+@app.route('/delete/<t_name>/<s_number>/',methods=['GET','POST'])
 def delete_stu(s_number,t_name):
     #先删除student表里的内容——score表里的相关内容会自动删除
     del_stu = Student.query.filter_by(s_number=s_number).first()
@@ -100,23 +113,27 @@ def delete_stu(s_number,t_name):
         db.session.commit()
     return redirect(url_for('teacher',t_name=t_name))
 
-@app.route('/show/<t_name>/<s_number>',methods=['GET','POST'])
-def show_stu(s_number,t_name):
-    #规定当前学期为第三学期 此后改参数可以通过函数参数传入
-    student_scores = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=3).all() # 获取该学生成绩信息
-    print(student_scores)
-    s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
+@app.route('/show/<t_name>/<s_number>/<semester>/',methods=['GET','POST'])
+def show_stu(s_number,t_name,semester):
+    semester=int(semester)
+    student_scores = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=semester).all() # 获取该学生成绩信息
 
+    s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
+    print(s_name)
     #查询该门课最高分
     max_scores = []
     all_courses = ["语文",'数学','英语','物理','化学','生物','政治','历史','地理']
+
+    # print(semester)
+    # student = Score_plus.query.filter_by(coursename="语文",s_semester=semester).order_by('-score').first().
+    
     for coursename in all_courses:
-        max_scores.append( Score_plus.query.filter_by(coursename=coursename,s_semester=3).order_by('-score').first().score )
+        max_scores.append( Score_plus.query.filter_by(coursename=coursename,s_semester=semester).order_by('-score').first().score )
     
     #计算平均分
     scores_average = []
     for coursename in all_courses:
-        student_scores = Score_plus.query.filter_by(coursename=coursename,s_semester=3).all()
+        student_scores = Score_plus.query.filter_by(coursename=coursename,s_semester=semester).all()
         sum = 0
         i = 0
         for student_score in student_scores:
@@ -124,28 +141,44 @@ def show_stu(s_number,t_name):
             i+=1
         scores_average.append(sum/i)
 
-    return render_template('show_student.html',s_name=s_name,t_name=t_name,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average)
+    return render_template('show_student.html',s_number=s_number,s_name=s_name,t_name=t_name,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average)
 
 
-@app.route('/alter/<s_number>',methods=['GET','POST'])
+@app.route('/alter_stu/<s_number>/',methods=['GET','POST'])
 def alter_stu(s_number):
-    # del_stu=Student.query.filter_by(s_number=s_number).first()
-    # db.session.delete(del_stu)
-    # db.session.commit() 
-    pass
+    alter_stu=Student.query.filter_by(s_number=s_number).first()
+    return render_template("alter_student.html",alter_stu=alter_stu)
 
-@app.route('/add_stu',methods=['GET','POST'])
-def add_stu():
-    # stu_dict = request.form.to_dict()
-    # print(stu_dict)
-    return 'ok'
-    # s_name = request.form.
+@app.route('/alter_stu_sql/<s_number>/',methods=['GET','POST'])
+def alter_stu_sql(s_number):
+    alter_stu=Student.query.filter_by(s_number=s_number).first()
+    student = request.form.to_dict()
+    alter_stu.s_number = student['s_number']
+    alter_stu.s_name = "22223"#student['s_name']
+    alter_stu.s_semester = student['semester']
+    alter_stu.s_sex = student['radio']
+    alter_stu.s_age = student['s_age']
+    db.session.commit()
+    return redirect(url_for("alter_stu",s_number=s_number))
 
-    # if request.method=="GET":
-    #     return
-    # if request.method=="POST":
+@app.route('/add_stu/<t_name>/',methods=['POST'])
+def add_stu(t_name):
+    return render_template('add_student.html',t_name=t_name)
     
-
+@app.route('/add_stu_sql/<t_name>/',methods=['POST'])
+def add_stu_sql(t_name):
+    print(request.form)
+    student = request.form.to_dict()
+    print(student)
+    s_number = student['s_number']
+    s_name = student['s_name']
+    s_semester = student['s_semester']
+    s_sex = student['radio']
+    s_age = student['s_age']
+    add_student = Student(s_name=s_name,s_number=s_number,s_sex=s_sex,s_age=s_age,s_semester=s_semester)
+    db.session.add(add_student)
+    db.session.commit()
+    return redirect(url_for("teacher",t_name=t_name))
 
 
 if __name__ == "__main__":

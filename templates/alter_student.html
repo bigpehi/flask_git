@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>添加学生信息</title>
+    <title>修改学生信息</title>
     <meta name="description" content="">
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,28 +64,36 @@
             
             <div class="tpl-portlet-components">
                 <div class="portlet-title">
-                    <h1 align="center"><span style="font-size: 35px;color: #0e90d2">添加学生信息</span></h1>
+                    <h1 align="center"><span style="font-size: 35px;color: #0e90d2">修改学生信息</span></h1>
                 </div>
                 <div class="tpl-block">
                     
                     <div class="am-g1">
                         <div class="am-u-sm-12">
-							<form action="{{ url_for('add_stu_sql',t_name=t_name)}}" method="post">
+
+							<form action="{{ url_for('alter_stu_sql',s_number=alter_stu.s_number)}}" method="post">
 								<div class="am-form-group">
-									<input style="border:0.5px solid #0e90d2" type="text"  name="s_number"  placeholder="学号">
+									<input style="border:0.5px solid #0e90d2" type="text"  name="s_number"  placeholder="学号" value={{alter_stu.s_number}}>
 								</div>
 								<br>
 								<div class="am-form-group">
-									<input style="border:0.5px solid #0e90d2" type="text" name="s_name"  placeholder="姓名">
+									<input style="border:0.5px solid #0e90d2" type="text" name="s_name"  placeholder="姓名" value = {{alter_stu.s_name}}>
 								</div>
 								
 								<br>
 								<div class="am-form-group">
-									<input style="border:0.5px solid #0e90d2" type="text" name="s_age"  placeholder="年龄">
+									<input style="border:0.5px solid #0e90d2" type="text" name="s_age"  placeholder="年龄" value={{alter_stu.s_age}}>
 								</div>
 								<br>
 								<div class="am-form-group">
-									<input style="border:0.5px solid #0e90d2" type="text" name="s_semester"  placeholder="当前学期">
+									<select name="semester"> 
+                                        <option value="1" selected>1</option> 
+                                        <option value="2">2</option> 
+                                        <option value="3">3</option> 
+                                        <option value="4">4</option> 
+                                        <option value="5">5</option> 
+                                        <option value="6">6</option> 
+                                    </select>
 								</div>
 								<br>
 								<div class="login-font">
