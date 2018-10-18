@@ -78,8 +78,13 @@ def student(s_number,semester):
         for student_score in student_scores:
             sum += student_score.score
             i+=1
-        scores_average.append(sum/i)
-    return render_template('student_index.html',s_name=s_name,s_number=s_number,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,semester=semester)
+        scores_average.append(round(sum/i,2))
+    s_scores,average_scores = figure(s_number)
+    return render_template('student_index.html',
+                            s_name=s_name,s_number=s_number,
+                            student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,semester=semester,
+                            s_scores=s_scores,average_scores=average_scores,#用于折线图的数据
+                            )
 
 @app.route('/teacher/<t_name>/',methods=['GET','POST'])
 def teacher(t_name):
@@ -138,7 +143,7 @@ def show_stu(s_number,t_name,semester):
             i+=1
         scores_average.append(round(sum/i,2))
 
-    s_scores,average_scores = figure("169094334")
+    s_scores,average_scores = figure(s_number)
 
     return render_template('show_student.html',
                             s_number=s_number,s_name=s_name,t_name=t_name,
