@@ -8,7 +8,7 @@ from wtforms.validators import DataRequired,EqualTo
 # 导入配置好的相关数据库信息
 from flask_sqlalchemy import SQLAlchemy
 # 导入定义好的模型
-from model import Score,Course,Score_plus,Student,User,default_semester,db,app
+from model import Score,Course,Score_plus,Student,User,default_semester,db,app,figure
 
 @app.route('/',methods=['GET','POST'])
 def login():
@@ -127,7 +127,7 @@ def show_stu(s_number,t_name,semester):
     for coursename in all_courses:
         max_scores.append( Score_plus.query.filter_by(coursename=coursename,s_semester=semester).order_by('-score').first().score )
     
-    #计算平均分
+    # 计算平均分
     scores_average = []
     for coursename in all_courses:
         student_scores = Score_plus.query.filter_by(coursename=coursename,s_semester=semester).all()
@@ -138,7 +138,13 @@ def show_stu(s_number,t_name,semester):
             i+=1
         scores_average.append(round(sum/i,2))
 
-    return render_template('show_student.html',s_number=s_number,s_name=s_name,t_name=t_name,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average)
+    s_scores,average_scores = figure("169094334")
+
+    return render_template('show_student.html',
+                            s_number=s_number,s_name=s_name,t_name=t_name,
+                            student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,#用于表的数据
+                            s_scores=s_scores,average_scores=average_scores,#用于折线图的数据
+                            )
 
 
 @app.route('/alter_stu/<s_number>/',methods=['GET','POST'])

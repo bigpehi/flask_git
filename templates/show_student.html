@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script> 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>教务管理系统</title>
@@ -49,12 +50,6 @@
             </ul>
         </div>
     </header>
-
-
-
-
-
-
 
     <div class="tpl-page-container tpl-page-header-fixed">
 
@@ -115,50 +110,126 @@
                             <th align="center"><p align=center font-size:10px>分数</p></th>                            
                             <th align="center"><p align=center font-size:10px>班级平均分</p></th>                   
                             <th align="center"><p align=center font-size:10px>班级最高分</p></th>
-                        
-                        
                             
-                            </tr>
-                            
-                            
+                            </tr>     
                         
                         {%for i in range(0,9) %}
                             <tr align="center">    
-                            
-
                             <td align="center">{{["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)}}</td>
-                            <!-- <td align="center">{{student_scores[i].coursename}}</td> -->
-                            <!-- <td align="center">{{student_scores[i].query.filter_by(coursename=["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)).first().score}}</td> -->
                             <td align="center">{{student_scores[i].score}}</td>
                             <td align="center"> {{scores_average[i]}} </td>
-                            
                             <td align="center"> {{max_scores[i]}} </td>
-                            
-                        
                             </tr>
-                        
                         {%endfor%}
                             
-                        </table></center>
+                        </table>
 
 
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="box" style="height:400px;width: 800px;padding: 20px"></div>
+      
+    <script>
+    // 获取到这个DOM节点，然后初始化
 
-                        </div>
+    var myChart = echarts.init(document.getElementById("box"));
+    var option = {
+        // 标题
+        title: {
+            text: '成绩折线图',
+            subtext: '革命尚未成功，同志任需努力！'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        //图例名
+        legend: {
+            data:['学生成绩','平均成绩']
+        },
+        grid: {
+            left: '3%',   //图表距边框的距离
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        //工具框，可以选择
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        //x轴信息样式
+        xAxis: {
+            type: 'category',
+            
+            boundaryGap: false,
+            data: ['第一学期','第二学期','第三学期','第四学期','第五学期','第六学期'],
+            //坐标轴颜色
+            axisLine:{
+                lineStyle:{
+                    color:'red'
+                }
+            },
+            //x轴文字旋转
+            axisLabel:{
+                rotate:30,
+                interval:0
+            },
+        },
 
-                    </div>
-                </div>
-                <div class="tpl-alert"></div>
+        yAxis : [
+            {
+                type : 'value',
+                scale: true,
+                axisLabel : {
+                    formatter: '{value} 分'
+                }
+            }
+        ],
+        series: [
+            //虚线
+            {
+                name:'学生成绩',
+                type:'line',
+                symbolSize:4,   //拐点圆的大小
+                color:'blue',  //折线条的颜色
+                data:{{s_scores}},
+                smooth:false,   //关键点，为true是不支持虚线的，实线就用true
+                itemStyle:{
+                    normal:{
+                        lineStyle:{
+                            width:2,
+                            type:'dotted'  //'dotted'虚线 'solid'实线
+                        }
+                    }
+                }
+            },
+            //实线
+            {
+                name:'平均成绩',
+                type:'line',
+                symbol:'circle',
+                symbolSize:4,
+                itemStyle:{
+                    normal:{
+                        color:'red',
+                        borderColor:'red'  //拐点边框颜色
+                    }
+                },
+                data:{{average_scores}}
+            },
+            
+        ]
+    };
+
+    myChart.setOption(option);
+    </script>
+    </center>
             </div>
 
-
-
-
-
-
-
-
-
-
+    </div>
+</div>
+<div class="tpl-alert"></div>
+</div>
         </div>
 
     </div>

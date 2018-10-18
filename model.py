@@ -73,11 +73,26 @@ class User(db.Model):
         self.password = password
         self.radio  = radio
 
+#这个函数用来提供折线图的数据        
+def figure(s_number): #参数：科目 学号————>学生该门课多学期总分分数折线图+全部学生总分平均成绩折线图
+    s_scores=[] # y1 该学生所有学期的总分数
+    for semester in range(1,7):
+        s_scores_semester = Score_plus.query.filter_by(s_number=s_number,s_semester=semester).all() #某学期该学生的所有分数
+        sum_semester = 0
+        for score in s_scores_semester:
+            sum_semester += score.score
+        s_scores.append(sum_semester)
 
-# 定义表单类
-# class Form_test(FlaskForm):
-#     username = StringField('用户名：',validators=[DataRequired()])
-#     password = PasswordField('密码：',validators=[DataRequired()])
-#     radioButton = RadioField('method', choices=[(1,'学生'),(2,'教师')],default=1)
+    average_scores=[] # y2
+    for semester in range(1,7):
+        scores = Score_plus.query.filter_by(s_semester=semester).all() #所有人某学期的所有成绩
+        # 计算平均成绩
+        sum,i=0,0
+        for score in scores:
+            sum+=score.score # 累计分数
+            i+=1 # 累计人数
+        average_scores.append(round(sum/(i//9),2))
+    # 横坐标x
+    # x = [1,2,3,4,5,6]
 
-#     # input = SubmitField('提交')
+    return s_scores,average_scores
