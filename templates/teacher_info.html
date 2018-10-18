@@ -156,7 +156,11 @@
                 </div>
                 <center>
                     <form action="{{  url_for('add_stu',t_name=t_name)}}" method="post" >
-                        <p><button type="submit" class="am-btn am-btn-default">添加</button></p>
+                        <p><button type="submit" class="am-btn am-btn-default">添加学生</button></p>
+        
+                    </form>
+                    <form action="{{  url_for('add_score',t_name=t_name)}}" method="post" >
+                        <p><button type="submit" class="am-btn am-btn-default">添加成绩</button></p>
         
                     </form>
                 </center>

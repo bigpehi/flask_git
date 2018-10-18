@@ -126,9 +126,9 @@
                             <tr align="center">    
                             
 
-                            <td align="center">{{["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)}}</td>
+                            <td align="center">{{student_scores[i].coursename}}</td>
                             
-                            <td align="center">{{student_scores[i].query.filter_by(coursename=["语文",'数学','英语','物理','化学','生物','政治','历史','地理'].pop(i)).first().score}}</td>
+                            <td align="center">{{student_scores[i].score}}</td>
                             
                             <td align="center"> {{scores_average[i]}} </td>
                             

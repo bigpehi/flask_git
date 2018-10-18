@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,url_for,redirect
+from flask import Flask,render_template,request,url_for,redirect,flash
 # 导入wtf扩展的表单类
 from flask_wtf import FlaskForm
 # 导入自定义表单需要的字段
@@ -29,9 +29,6 @@ def login():
         username = user_dict['username']
         password = user_dict['password']
         radio = user_dict['radio']
-        # radio = "学生"
-        # if 'radio2' in user_dict:
-        #     radio = "教师"
 
         #验证该用户是否在数据库中
         if User.query.filter_by(username=username).first():
@@ -139,7 +136,7 @@ def show_stu(s_number,t_name,semester):
         for student_score in student_scores:
             sum += student_score.score
             i+=1
-        scores_average.append(sum/i)
+        scores_average.append(round(sum/i,2))
 
     return render_template('show_student.html',s_number=s_number,s_name=s_name,t_name=t_name,student_scores=student_scores,max_scores=max_scores,scores_average=scores_average)
 
@@ -152,14 +149,22 @@ def alter_stu(s_number):
 @app.route('/alter_stu_sql/<s_number>/',methods=['GET','POST'])
 def alter_stu_sql(s_number):
     alter_stu=Student.query.filter_by(s_number=s_number).first()
-    student = request.form.to_dict()
-    alter_stu.s_number = student['s_number']
-    alter_stu.s_name = "22223"#student['s_name']
-    alter_stu.s_semester = student['semester']
-    alter_stu.s_sex = student['radio']
-    alter_stu.s_age = student['s_age']
-    db.session.commit()
-    return redirect(url_for("alter_stu",s_number=s_number))
+    if alter_stu:
+        try:
+            student = request.form.to_dict()
+            alter_stu.s_number = student['s_number']
+            alter_stu.s_name = student['s_name']
+            alter_stu.s_semester = student['semester']
+            alter_stu.s_sex = student['radio']
+            alter_stu.s_age = student['s_age']
+            db.session.commit()
+        except Exception as e:
+            flash("修改错误")
+            db.session.rollback()
+    else:
+        flash("找不到该学生信息")    
+        # return redirect(url_for('alter_stu_sql',s_number=s_number))
+    return redirect(url_for("alter_stu",s_number=s_number) )
 
 @app.route('/add_stu/<t_name>/',methods=['POST'])
 def add_stu(t_name):
@@ -180,6 +185,22 @@ def add_stu_sql(t_name):
     db.session.commit()
     return redirect(url_for("teacher",t_name=t_name))
 
+@app.route('/add_score/<t_name>',methods=["POST"])
+def add_score(t_name):
+    return render_template('add_score.html',t_name=t_name)
+
+@app.route('/add_score_sql/<t_name>',methods=['POST'])
+def add_score_sql(t_name):
+    score1=request.form.to_dict()
+    s_number=score1['s_number']
+    s_name=score1['s_name']
+    s_semester=score1['s_semester']
+    coursename=score1['coursename']
+    score=score1['score']
+    add_score=Score_plus(s_number=s_number,s_name=s_name,s_semester=s_semester)
+    db.session.add(add_score)
+    db.session.commit()
+    return redirect(url_for("teacher",t_name=t_name))
 
 if __name__ == "__main__":
     app.run()
