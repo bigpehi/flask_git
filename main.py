@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,url_for,redirect,flash
+from flask import Flask,render_template,request,url_for,redirect,flash,make_response, send_from_directory
 # 导入wtf扩展的表单类
 from flask_wtf import FlaskForm
 # 导入自定义表单需要的字段
@@ -9,6 +9,10 @@ from wtforms.validators import DataRequired,EqualTo
 from flask_sqlalchemy import SQLAlchemy
 # 导入定义好的模型
 from model import Score,Course,Score_plus,Student,User,default_semester,db,app,figure
+from werkzeug.utils import secure_filename
+import os
+import xlrd
+import xlwt
 
 @app.route('/',methods=['GET','POST'])
 def login():
@@ -118,7 +122,7 @@ def delete_stu(s_number,t_name):
 @app.route('/show/<t_name>/<s_number>/<semester>/',methods=['GET','POST'])
 def show_stu(s_number,t_name,semester):
     semester=int(semester)
-    student_scores = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=semester).all() # 获取该学生成绩信息
+    student_scores_semester = Score_plus.query.filter_by(s_number=s_number,s_semester=semester).all() # 获取该学生成绩信息
 
     s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
     print(s_name)
@@ -147,7 +151,7 @@ def show_stu(s_number,t_name,semester):
 
     return render_template('show_student.html',
                             s_number=s_number,s_name=s_name,t_name=t_name,
-                            student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,#用于表的数据
+                            student_scores=student_scores_semester,max_scores=max_scores,scores_average=scores_average,#用于表的数据
                             s_scores=s_scores,average_scores=average_scores,#用于折线图的数据
                             )
 
@@ -212,6 +216,48 @@ def add_score_sql(t_name):
     db.session.add(add_score)
     db.session.commit()
     return redirect(url_for("teacher",t_name=t_name))
+
+@app.route('/download_score/<t_name>',methods=['POST'])
+def download_score(t_name):
+    pass
+
+@app.route('/upload/<t_name>/', methods=['POST', 'GET'])
+def upload(t_name):
+    if request.method == 'POST':
+        # 上传
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)  # 当前文件所在路径
+        upload_path = os.path.join(basepath, 'static/uploads',secure_filename(f.filename))  #注意：没有的文件夹一定要先创建，不然会提示没有该路径
+        # print(f.filename)
+        f.save(upload_path)
+
+        # 读取
+        workbook = xlrd.open_workbook('C:/Users/lcb/gitpro/flask_git/static/uploads/'+f.filename) # 打开文件
+        # 获取所有学生信息
+        sheet1 = workbook.sheet_by_index(0) # sheet索引从0开始
+        # 创建一个workbook 设置编码
+        workbook = xlwt.Workbook(encoding = 'utf-8')
+        # 创建一个worksheet
+        worksheet = workbook.add_sheet('My Worksheet')
+        for i in range(1,sheet1.nrows):
+            s_number=sheet1.cell(i,1).value
+            s_name=sheet1.cell(i,2).value
+            s_semester=sheet1.cell(i,3).value
+            coursename=sheet1.cell(i,4).value
+            score=sheet1.cell(i,5).value
+            if not Score_plus.query.filter_by(s_name=s_name).first():
+                return "文件中有学生不存在"
+            scoreplus = Score_plus(s_number,s_name,s_semester,coursename,score)
+            db.session.add(scoreplus)
+            db.session.commit()
+
+            # 保存
+            # workbook.save('C:/Users/lcb/Desktop/Excel_test2.xls')
+
+
+        return redirect(url_for('teacher',t_name=t_name))
+    return render_template('upload.html')
+
 
 if __name__ == "__main__":
     app.run()
