@@ -1,14 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script> 
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>教务管理系统</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+     <link rel="icon" type="image/png" href="assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <link rel="stylesheet" href="/static/assets/css/app.css">
+
+    <style>
+            /* hr {color:sienna;}
+            p {margin-left:20px;}
+            body {background-image:url("images/back40.gif");} */
+            th {color:rgb(36, 34, 33);}
+            
+    </style>
 </head>
-<body>
-    <h1>文件上传示例</h1>
-    <form action="" enctype='multipart/form-data' method='POST'>
-        <input type="file" name="file">
-        <input type="submit" value="上传">
-    </form>
+
+<body data-type="generalComponents">
+
+
+    <header class="am-topbar am-topbar-inverse admin-header">
+        <div class="am-topbar-brand">
+            <a href="{{url_for('login')}}" class="tpl-logo">
+                <img src="/static/assets/img/logo.png" alt="">
+            </a>
+        </a>
+        <a href="javascript:window.history.back(-1)" target="_self" align="right"><img src="/static/assets/img/fanhui4.png" /></a>
+
+            <a href="javascript:window.history.back(-1)" target="_self" align="right"><img src="/static/assets/img/fanhui4.png" /></a>
+
+        </div>
+        <!-- <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right"> -->
+
+        <!-- </div> -->
+
+        
+
+        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+                
+                
+            </ul>
+        </div>
+    </header>
+
+
+
+
+
+
+
+    <div class="tpl-page-container tpl-page-header-fixed">
+
+
+        <center>
+        <div class="tpl-content-wrapper-center">
+            
+            <div class="tpl-portlet-components">
+                <div class="portlet-title">
+                    <h1 align="center"><span style="font-size: 35px;color: #0e90d2">学生成绩上传</span></h1>
+                </div>
+                <div class="tpl-block">
+                    
+                    <div class="am-g1">
+                        <div class="am-u-sm-12">
+                            <form action="" enctype='multipart/form-data' method='POST'>
+                                <input type="file" name="file">
+                                <input type="submit" value="上传">
+                            </form>        
+                        
+                    
+                    
+                    </center>
+                        
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tpl-alert"></div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+  <script src="/static/assets/js/jquery.min.js"></script>
+    <script src="/static/assets/js/amazeui.min.js"></script>
+    <script src="/static/assets/js/app.js"></script>
 </body>
+
 </html>

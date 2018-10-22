@@ -1,3 +1,4 @@
+# 该文件中存储数据库模型、表单模型以及常用的函数等
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 # 启动

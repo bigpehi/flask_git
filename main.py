@@ -59,7 +59,7 @@ def login():
 @app.route('/student/<s_number>/<semester>/',methods=['GET','POST'])
 def student(s_number,semester):
     semester=int(semester)
-    student_scores = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=semester).all() # 获取该学生成绩信息
+    student_scores_semester = Score_plus.query.filter_by(s_number=s_number).filter_by(s_semester=semester).all() # 获取该学生成绩信息
 
     s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
     print(s_name)
@@ -86,7 +86,7 @@ def student(s_number,semester):
     s_scores,average_scores = figure(s_number)
     return render_template('student_index.html',
                             s_name=s_name,s_number=s_number,
-                            student_scores=student_scores,max_scores=max_scores,scores_average=scores_average,semester=semester,
+                            student_scores=student_scores_semester,max_scores=max_scores,scores_average=scores_average,semester=semester,
                             s_scores=s_scores,average_scores=average_scores,#用于折线图的数据
                             )
 
@@ -125,6 +125,7 @@ def show_stu(s_number,t_name,semester):
     student_scores_semester = Score_plus.query.filter_by(s_number=s_number,s_semester=semester).all() # 获取该学生成绩信息
 
     s_name = Student.query.filter_by(s_number=s_number).first().s_name # 获取该学生姓名
+    s_current_semester = Student.query.filter_by(s_number=s_number).first().s_semester # 获取该学生当前学期
     print(s_name)
     #查询该门课最高分
     max_scores = []
@@ -150,7 +151,7 @@ def show_stu(s_number,t_name,semester):
     s_scores,average_scores = figure(s_number)
 
     return render_template('show_student.html',
-                            s_number=s_number,s_name=s_name,t_name=t_name,
+                            s_number=s_number,s_name=s_name,t_name=t_name,s_current_semester=int(s_current_semester),
                             student_scores=student_scores_semester,max_scores=max_scores,scores_average=scores_average,#用于表的数据
                             s_scores=s_scores,average_scores=average_scores,#用于折线图的数据
                             )
@@ -245,7 +246,7 @@ def upload(t_name):
             s_semester=sheet1.cell(i,3).value
             coursename=sheet1.cell(i,4).value
             score=sheet1.cell(i,5).value
-            if not Score_plus.query.filter_by(s_name=s_name).first():
+            if not Student.query.filter_by(s_name=s_name).first():
                 return "文件中有学生不存在"
             scoreplus = Score_plus(s_number,s_name,s_semester,coursename,score)
             db.session.add(scoreplus)
@@ -256,7 +257,8 @@ def upload(t_name):
 
 
         return redirect(url_for('teacher',t_name=t_name))
-    return render_template('upload.html')
+    if request.method == 'GET':
+        return render_template('upload.html')
 
 
 if __name__ == "__main__":

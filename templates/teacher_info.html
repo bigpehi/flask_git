@@ -159,14 +159,11 @@
                         <p><button type="submit" class="am-btn am-btn-default">添加学生</button></p>
         
                     </form>
-                    <form action="{{  url_for('add_score',t_name=t_name)}}" method="post" >
+                    <form action="{{  url_for('upload',t_name=t_name)}}" method="get" >
                         <p><button type="submit" class="am-btn am-btn-default">添加成绩</button></p>
         
                     </form>
-                    <form action="{{  url_for('download_score',t_name=t_name)}}" method="post" >
-                        <p><button type="submit" class="am-btn am-btn-default">下载成绩表</button></p>
-        
-                    </form>
+
                 </center>
                 <div class="tpl-alert"></div>
             </div>
