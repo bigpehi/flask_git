@@ -48,6 +48,7 @@ def login():
                         return  redirect(url_for('student',s_number=password,semester=default_semester))
                         # return render_template('student_index.html',s_name=username)
                 else:#身份错误
+                    # flash("身份错误")
                     return "身份错误"#待改成flash
             else:#登陆成功
                 return "用户名或密码错误"#待改成flash

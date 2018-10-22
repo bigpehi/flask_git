@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/courses'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN']=True
 app.config['secret_key']='secret'
+app.config['SESSION_TYPE'] = 'filesystem'
 db = SQLAlchemy(app)
 
 default_semester=3 # 默认学期
